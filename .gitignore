@@ -1,0 +1,6 @@
+# Carpetas
+.dist
+.idea
+.vscode
+/__pycache__
+/migrations
