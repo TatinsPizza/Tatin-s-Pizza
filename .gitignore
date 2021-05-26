@@ -1,8 +1,0 @@
-# Carpetas
-.dist
-.idea
-.vscode
-/__pycache__
-/migrations
-/app/migrations
-/manage.py
