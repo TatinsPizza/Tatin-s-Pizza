@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'Tatins_Pizza.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Tatins_Pizza',#nombre de la base de datos que creamos
+        'USER': 'postgres',
+        'PASSWORD':'admin',#contraseña de Postgresql
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
