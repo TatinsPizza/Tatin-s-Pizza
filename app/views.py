@@ -1,5 +1,9 @@
 from app.models import Comentario, Comida, Usuario
 from django.shortcuts import redirect, render
+from django.http import JsonResponse, HttpResponse
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.conf import settings
 
 #----Usuario actual----
 class Usuario_actual:
@@ -103,8 +107,19 @@ def carrito(request,id):
     return render(request,"carrito.html")
 
 #Incompleto
-def boleta(request,id):
-    return render(request,"boleta.html")
+def boleta(request):
+    template = get_template('../templates/boleta.html')
+    context = {'title': 'primer titulo'}
+    html = template.render(context)
+    response = HttpResponse(content_type='application/pdf')
+   # response['Content-Disposition'] = 'attachment;filename="report.pdf"'
+   
+    pisaStatus = pisa.CreatePDF(
+        html, dest=response)
+   
+    if pisaStatus.err:
+        return HttpResponse('Error <pre>',html,'</pre>')
+    return response
 
 #Casi-Completo
 def comentario(request):
@@ -158,7 +173,7 @@ def monitoreo_comida(request):
 
     return render(request,"monitoreo_comidas.html",contexto)
 
-def editar_Comida(request,id):
+def editar_comida(request,id):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         descripcion = request.POST["descripcion"]

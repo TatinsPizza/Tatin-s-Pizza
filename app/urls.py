@@ -13,12 +13,14 @@ urlpatterns = [
    #Cliente
     path('tatinspizza.com/pedir',views.pedir),
     path('tatinspizza.com/cuenta',views.cuenta),
-    path('tatinspizza.com/carrito',views.carriento),
+    path('tatinspizza.com/carrito',views.carrito),
     path('tatinspizza.com/boleta',views.boleta),
     path('tatinspizza.com/comentario',views.comentario),
     #Comida
     path('tatinspizza.com/clientes',views.monitoreo_cliente),
-    path('tatinspizza.com/editar_cliente/<id:int>',views.editar_cliente),
+    path('tatinspizza.com/editar_cliente/<int:id>',views.editar_cliente),
+    path('tatinspizza.com/editar_comida/<int:id>',views.editar_comida),
+   
    
 
 ]

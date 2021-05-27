@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     #importar la app
     'app',
+    'bootstrap5',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,14 +79,15 @@ WSGI_APPLICATION = 'Tatins_Pizza.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Tatins_Pizza',#nombre de la base de datos que creamos
-        'USER': 'postgres',
-        'PASSWORD':'admin',#contraseña de Postgresql
-        'HOST': 'localhost',
-        'PORT': 5432,
-    }
+    
+    ##'default': {
+    ##    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    ##    'NAME': 'Tatins_Pizza',#nombre de la base de datos que creamos
+    ##    'USER': 'postgres',
+    ##    'PASSWORD':'admin',#contraseña de Postgresql
+    ##    'HOST': 'localhost',
+    ##    'PORT': 5432,
+    ##}
 }
 
 
