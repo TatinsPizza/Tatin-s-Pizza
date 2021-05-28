@@ -5,6 +5,9 @@ from xhtml2pdf import pisa
 from django.template.loader import get_template
 from django.conf import settings
 
+from datetime import date
+from datetime import datetime
+
 #----Usuario actual----
 class Usuario_actual:
 	id = 0
@@ -108,11 +111,19 @@ def carrito(request,id):
 
 #Incompleto
 def boleta(request):
+    #Provisorio
+    comidas = ['Lomito a lo pobre','Chacarero','Lomito','Bebida','Café']
+    descripciones = [1233124,123123,123123,12312,123123]
+
+    ahora = datetime.now()
+    fecha = ahora.strftime('%d/%m/%Y')
+    hora = ahora.strftime('%H:%M')
+    
     template = get_template('../templates/boleta.html')
-    context = {'title': 'primer titulo'}
+    context = {'title': 'primer titulo','comidas':comidas,'descripcion':'precios','subtotal':12312,'total':13123,'impuesto':1231, 'fecha':fecha,'hora':hora}
     html = template.render(context)
     response = HttpResponse(content_type='application/pdf')
-   # response['Content-Disposition'] = 'attachment;filename="report.pdf"'
+    #response['Content-Disposition'] = 'attachment;filename="report.pdf"'
    
     pisaStatus = pisa.CreatePDF(
         html, dest=response)
@@ -120,7 +131,6 @@ def boleta(request):
     if pisaStatus.err:
         return HttpResponse('Error <pre>',html,'</pre>')
     return response
-
 #Casi-Completo
 def comentario(request):
     if request.method == "POST":

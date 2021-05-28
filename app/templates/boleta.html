@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+  .head{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  
+  .seccion h1{
+    font-size: 30px;
+    text-align: center;
+    text-decoration: underline;
+  }
+  .compania{
+    font-size: 12px;
+    font-style: italic;
+    margin: 0px;
+    padding: 0px;
+  }
+  h3{
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  .cliente, .pedido{
+    text-align: left;
+    padding: 0px;
+    font-size: 12px;
+  }
+   h2{
+    text-decoration: underline;
+  }
+ 
+  .glosa h3{
+    font-size: 16px;
+    text-align: right;
+  }
+
+  table, th, td{
+    border: 1px solid black;
+    
+  }
+  th, td{
+    padding: 4px;
+    text-align: left;
+    font-size: 12px;
+  }
+  .titulo{
+    font-weight: bold;
+    font-size: 15px;
+  }
+</style>
+<body>
+    <div class="seccion">
+        <div >
+          <div class="compania">
+            <h3>Tatin´s Pizza Ltda.</h3>
+            <h3>Avda. Las Encinas,Temuco</h3>
+            <h3>Telefono: 45 123321</h3>
+          </div>
+          <div>
+            <h1>Tatin´s Boleta #{{numero}}</h1>
+          </div>
+        </div>
+      </div>
+    <div class="cliente">
+      <h2>Datos Cliente</h2>
+      <h3>Nombre:{{cliente.nombre}}</h3>
+      <h3>Rut:{{cliente.rut}}</h3>
+      <h3>Correo:{{cliente.correo}}</h3>
+      
+      </div>
+    <div class="pedido">
+        <h2>Datos Pedido</h2>
+        <h3>Fecha: {{fecha}}</h3>
+        <h3>Hora: {{hora}}</h3>
+        <h3>N° Pedido: {idpedido}</h3>
+        <h3>Pedido:</h3>
+    </div>
+
+    <div>
+      <table >
+        <thead>
+          <tr>
+            <td style="width: 10%;font-size:14px;font-weight: bold;">Cantidad</td>
+            <td style="width: 15%;font-size:14px;font-weight: bold;">Comida</td>
+            <td style="width: 45%;font-size:14px;font-weight: bold;">Descripcion</td>
+            <td style="width: 15%;font-size:14px;font-weight: bold;">Precio Unitario</td>
+            <td style="width: 15%;font-size:14px;font-weight: bold;">Importe</td>
+          </tr>
+        </thead>
+         <tbody>
+          {% for comida in comidas %}
+          <tr>
+            <td style="text-align: center;">1</td>
+            <td>{{comida}}</td>
+            <td>Pan bueno</td>
+            <td>3244</td>
+            <td>32422</td>
+          </tr>
+          {% endfor %}
+         </tbody>
+      </table>
+    </div>
+
+    <div class="glosa">
+        <h3 style="margin-top: 30px;">Subtotal: ${{subtotal}}</h3>
+        <h3>IVA: ${{impuesto}}</h3>
+        <h3 style="text-decoration: underline;">Total: ${{total}}</h3>
+    </div>
+    
+	
+</body>
+</html>
