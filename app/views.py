@@ -1,12 +1,21 @@
 from app.models import Comentario, Comida, Usuario
 from django.shortcuts import redirect, render
 from django.http import JsonResponse, HttpResponse
-from xhtml2pdf import pisa
+#Librerias PDF
 from django.template.loader import get_template
+from xhtml2pdf import pisa
+import smtplib 
+import smtplib
 from django.conf import settings
-
 from datetime import date
 from datetime import datetime
+#Librerias Email
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 
 #----Usuario actual----
 class Usuario_actual:
@@ -112,7 +121,7 @@ def carrito(request,id):
 #Incompleto
 def boleta(request):
     #Provisorio
-    comidas = ['Lomito a lo pobre','Chacarero','Lomito','Bebida','Café']
+    comidas = ['churrasssco','Chacarero','Lomito','Bebida','Café']
     descripciones = [1233124,123123,123123,12312,123123]
 
     ahora = datetime.now()
@@ -122,22 +131,28 @@ def boleta(request):
     template = get_template('../templates/boleta.html')
     context = {'title': 'primer titulo','comidas':comidas,'descripcion':'precios','subtotal':12312,'total':13123,'impuesto':1231, 'fecha':fecha,'hora':hora}
     html = template.render(context)
-    response = HttpResponse(content_type='application/pdf')
-    #response['Content-Disposition'] = 'attachment;filename="report.pdf"'
-   
+
+    RUTA = "C:/Users/javie/OneDrive/Python/Tatins_Pizza/app/temp"
+    file = open(os.path.join(RUTA, str('boleta') + '.pdf'), "w+b")
+  
     pisaStatus = pisa.CreatePDF(
-        html, dest=response)
+        html,dest=file)
+
+    pisaStatus = pisa.CreatePDF(html, dest=file, link_callback=template)
+ 
+    getCorreo(RUTA)
    
     if pisaStatus.err:
         return HttpResponse('Error <pre>',html,'</pre>')
-    return response
+
+    
+    return render(request,"boleta_impresa.html")
 #Casi-Completo
 def comentario(request):
+    
     if request.method == "POST":
         usuario = Usuario.objects.get(id_usuario = usuario_actual.id)
         comentario = request.POST["comentario"]
-        
-
 
         nuevo_comentario = Comentario()
         nuevo_comentario.comentario = comentario
@@ -253,3 +268,52 @@ def editar_cliente(request,id):
     }
 
     return render(request,"editar_cliente.html",contexto)
+
+def getCorreo(RUTA):
+    remitente = 'tatinspizza@gmail.com'
+    destinatarios = ['r.millanao02@ufromail.cl',]
+    asunto = '[Boleta] Tatin´s Pizza'
+    cuerpo = 'Muchas Gracias por preferir Tatin´s Pizza, A continuacion adjuntamos su boleta:'
+
+    # Creamos el objeto mensaje
+    mensaje = MIMEMultipart()
+    
+    # Establecemos los atributos del mensaje
+    mensaje['From'] = remitente
+    mensaje['To'] = ", ".join(destinatarios)
+    mensaje['Subject'] = asunto
+    
+    # Agregamos el cuerpo del mensaje como objeto MIME de tipo texto
+    mensaje.attach(MIMEText(cuerpo, 'plain'))
+    
+    # Abrimos el archivo que vamos a adjuntar
+    archivo_adjunto = open('C:/Users/javie/Desktop/tatinbd.png', 'rb')
+    
+    # Creamos un objeto MIME base
+    adjunto_MIME = MIMEBase('application', 'octet-stream')
+    # Y le cargamos el archivo adjunto
+    adjunto_MIME.set_payload(open(RUTA+str("/boleta.pdf"), "rb").read())
+    # Codificamos el objeto en BASE64
+    encoders.encode_base64(adjunto_MIME)
+    # Agregamos una cabecera al objeto
+    adjunto_MIME.add_header('Content-Disposition', "attachment; filename= {0}".format(os.path.basename(RUTA+str("/boleta.pdf"))))
+    # Y finalmente lo agregamos al mensaje
+    mensaje.attach(adjunto_MIME)
+    
+    # Creamos la conexión con el servidor
+    sesion_smtp = smtplib.SMTP('smtp.gmail.com', 587)
+    
+    # Ciframos la conexión
+    sesion_smtp.starttls()
+
+    # Iniciamos sesión en el servidor con el correo y contraseña
+    sesion_smtp.login('tatinspizza@gmail.com','laspizzadeltatin')
+
+    # Convertimos el objeto mensaje a texto
+    texto = mensaje.as_string()
+
+    # Enviamos el mensaje
+    sesion_smtp.sendmail(remitente, destinatarios, texto)
+
+    # Cerramos la conexión
+    sesion_smtp.quit()
