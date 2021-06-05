@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 
 
 class Usuario_actual:
-    id = 0
+    id = 1
     logeado = False
 
 
@@ -20,9 +20,15 @@ cantidad = []
 
 
 def index(request):
-    return render(request, "index.html")
+    comentarios = Comentario.objects.all()
+
+    contexto = {
+        "comentarios": comentarios,
+    }
+    return render(request, "index.html", contexto)
 
 # Casi-Completo (falta verificacion de correo)
+
 
 def registro(request):
     if request.method == "POST":
@@ -31,9 +37,8 @@ def registro(request):
         contrasena1 = request.POST["contrasena1"]
         contrasena2 = request.POST["contrasena2"]
 
-
-        if Usuario.objects.filter(correo=correo).exist() and contrasena1 != contrasena2:
-            return redirect("tatinspizza.com/registro")
+        if Usuario.objects.filter(correo=correo).exists() or contrasena1 != contrasena2:
+            return redirect("/tatinspizza.com/registro")
 
         nuevo_usuario = Usuario()
         nuevo_usuario.nombre = nombre
@@ -41,7 +46,7 @@ def registro(request):
         nuevo_usuario.contrasena = contrasena1
         nuevo_usuario.save()
 
-        return redirect("tatinspizza.com/inicio_sesion")
+        return redirect("/tatinspizza.com")
 
     return render(request, "registro.html")
 
@@ -87,6 +92,8 @@ def comida(request, id):
     return render(request, "comida.html", contexto)
 
 # completo
+
+
 def busqueda(request):
     return render(request, "comida.html")
 
@@ -172,12 +179,6 @@ def quitar_al_carrito(indice):
 
 
 # Incompleto
-def pedir(request, id):
-    return render(request, "pedir.html")
-
-# Incompleto
-
-
 def boleta(request, id):
     return render(request, "boleta.html")
 
@@ -187,22 +188,14 @@ def boleta(request, id):
 def comentario(request):
     if request.method == "POST":
         usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
-        comentario = request.POST["comentario"]
+        texto = request.POST["texto"]
 
         nuevo_comentario = Comentario()
-        nuevo_comentario.comentario = comentario
+        nuevo_comentario.texto = texto
         nuevo_comentario.usuario = usuario
         nuevo_comentario.save()
 
-        return redirect("tatinspizza.com/comentarios")
-
-    comentarios = Comentario.objects.all()
-
-    contexto = {
-        "comentarios": comentarios,
-    }
-
-    return render(request, "comentarios.html", contexto)
+    return redirect("/tatinspizza.com")
 
 
 # ----Administrador----

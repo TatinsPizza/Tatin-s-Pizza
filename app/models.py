@@ -17,7 +17,7 @@ class Usuario(models.Model):
     contrasena = models.CharField(max_length=20)
 
     # Definimos "admin" como un campo del tipo SmallInteger (se usara como un Boolean)
-    admin = models.SmallIntegerField()
+    admin = models.SmallIntegerField(default= 0)
 
     # Este metodo nos retornara el campo "admin" como boolean
     def isadmin(self):
@@ -47,7 +47,7 @@ class Pedido(models.Model):
     id_pedido = models.AutoField(primary_key=True)
 
     # Definimos "entregado" como un campo del tipo SmallInteger (se usara como un Boolean)
-    entregado = models.SmallIntegerField()
+    entregado = models.SmallIntegerField(default= 0)
 
     # Definimos "fecha" como un campo del tipo Date
     fecha = models.DateTimeField(auto_now_add=True)
