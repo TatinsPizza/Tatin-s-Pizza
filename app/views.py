@@ -21,8 +21,8 @@ from email import encoders
 
 
 class Usuario_actual:
-    id = 1
-    logeado = False
+    id = 14
+    logeado = True
 
 
 usuario_actual = Usuario_actual()
@@ -138,14 +138,14 @@ def resultado_busqueda(request):
 
 
 # Incompleto
-def cuenta(request, id):
+def mi_perfil(request):
     usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
 
     contexto = {
         "usuario": usuario,
     }
 
-    return render(request, "cuenta.html", contexto)
+    return render(request, "mi_perfil.html", contexto)
 
 # Incompleto
 
@@ -197,13 +197,6 @@ def quitar_al_carrito(indice):
     return redirect("tatinspizza.com/carrito")
 
 
-# Incompleto
-def boleta(request, id):
-    return render(request, "boleta.html")
-
-# Casi-Completo
-
-
 def comentario(request):
     if request.method == "POST":
         usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
@@ -243,7 +236,7 @@ def monitoreo_comidas(request):
     return render(request, "monitoreo_comidas.html", contexto)
 
 
-def editar_Comida(request, id):
+def editar_comida(request, id):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         descripcion = request.POST["descripcion"]
@@ -267,7 +260,7 @@ def editar_Comida(request, id):
 # --Cliente--
 
 
-def monitoreo_cliente(request):
+def monitoreo_usuarios(request):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         correo = request.POST["correo"]
@@ -279,18 +272,24 @@ def monitoreo_cliente(request):
         nuevo_usuario.contrasena = contrasena
         nuevo_usuario.save()
 
-        return redirect("tatinspizza.com/monitoreo_clientes")
+        return redirect("tatinspizza.com/monitoreo_usuarios")
 
-    clientes = Usuario.objects.all()
+    usuarios = Usuario.objects.all()
 
     contexto = {
-        "clientes": clientes,
+        "usuarios": usuarios,
     }
 
-    return render(request, "monitoreo_clientes.html", contexto)
+    return render(request, "monitoreo_usuarios.html", contexto)
 
+def eliminar_usuario(request,id):
+   
+    usuario = Usuario.objects.get(id_usuario = id)
+    usuario.delete()
 
-def editar_cliente(request, id):
+    return redirect("/tatinspizza.com/monitoreo_usuarios")
+
+def editar_usuario(request, id):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         correo = request.POST["correo"]
@@ -310,9 +309,8 @@ def editar_cliente(request, id):
         "cliente": cliente,
     }
 
-    return render(request, "editar_cliente.html", contexto)
+    return render(request, "editar_usuario.html", contexto)
 
-#Incompleto
 def boleta(request):
     #Provisorio
     comidas = ['churrasssco','Chacarero','Lomito','Bebida','Café']

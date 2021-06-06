@@ -6,43 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <link rel="stylesheet" href="../Estilo.css">
-    <title>Document</title>
+    <title>MiPerfil</title>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-danger">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/tatinspizza.com"><img src="{% static 'LogoTatin.png' %}" alt=""></a>
+      <a class="navbar-brand" href="/tatinspizza.com"><img style="max-width: 80px;" src="{% static 'LogoTatin.png' %}" alt=""></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          {%if isLogged%}
+          {%if usuario.logeado%}
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/tatinspizza.com/cuenta">Mi Perfil</a>
           </li>
-          {% enif %}
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/tatinspizza.com/menu">Menu</a>
           </li>
-          {%if isLogged%}
+          
+          {%if usuario.logeado%}
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/tatinspizza.com/carrito">Carrito</a>
           </li>
-          {% enif %}
+          {% endif %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
               Sesion
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {%if isLogged==false%}
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+              {%if usuario.logeado == False%}
               <li><a class="dropdown-item" href="/tatinspizza.com/inicio_sesion">Iniciar sesion</a></li>
-              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Regisarse</a></li>
-              {% enif %}
-              {%if isLogged%}
-              <li><a class="dropdown-item" href="/tatinspizza.com/cerrear_sesion">Cerrar Sesion</a></li>
-              {% enif %}
+              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Registrase</a></li>
+              {% endif %}
+              {% if usuario.logeado %}
+              <li><a class="dropdown-item" href="/tatinspizza.com/cerrar_sesion">Cerrar Sesion</a></li>
+              {% endif %}
             </ul>
           </li>
         </ul>
@@ -53,31 +53,27 @@
       </div>
     </div>
   </nav>
-      <header class="background-page">
-        <div class="background-over py-3">
-
-      <form class="container" action="/tatinspizza.com/editar_comida" method="POST">
-        {%csrf_token%}
-        <br><h3>Editar Comida</h3>
-          <div class="mb-3 mt-4">
-              <label for="exampleInputEmail1" class="form-label">Nombre</label>
-              <input type="text" class="form-control" minlength="1" name="nombre" value="{{comida.nombre}}">
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Descripcion </label>
-              <input type="text" class="form-control"  minlength="1" name="descripcion" placeholder="{{comida.descripcion}}">
-            </div>
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Precio</label>
-            <input type="text" class="form-control" name="precio" minlength="1" placeholder="{{comida.precio}}">
-          </div>
-          
-          
-          <button type="submit" class="btn btn-danger">Guardar Cambios</button>
-        </form>
-        </div>
-      </header>
-</body>
+    <header class="background-page">
+      <div class="background-over">
+      <div class="container">
+        <br><h3>Mi Perfil</h3>
+        <div class="card mt-5" >
+        <div class="card-header bg-danger">Nombre</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">{{usuario.nombre}}</li>
+        </ul>
+      </div>
+      <div class="card mt-4" >
+        <div class="card-header bg-danger">Email</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">{{usuario.correo}}</li>
+        </ul>
+      </div>
+      <a href="/tatinspizza/editar_perfil" class="btn btn-danger mt-5">Editar Datos</a>
+    </div>
+  </div>
+  </header>
+</body> 
 <style>
   .background-page{
     background: url(/static/fondo-pizza.jpg);
