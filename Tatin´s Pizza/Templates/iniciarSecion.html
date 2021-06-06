@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,23 +10,61 @@
     <title>IniciarSesion</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-danger">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#"><img src="../imgenes/Logo_Tatin_.png" alt="Tatin's Pizza Icon" style="width: 15%;"></a>
-          <a>Bienvenido {user}</a>
-        </div>
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/tatinspizza.com"><img src="{% static 'LogoTatin.png' %}" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/cuenta">Mi Perfil</a>
+          </li>
+          {% enif %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/menu">Menu</a>
+          </li>
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/carrito">Carrito</a>
+          </li>
+          {% enif %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Sesion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {%if isLogged==false%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/inicio_sesion">Iniciar sesion</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Regisarse</a></li>
+              {% enif %}
+              {%if isLogged%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/cerrear_sesion">Cerrar Sesion</a></li>
+              {% enif %}
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex mt-2">
+          <input class="form-control me-2 " type="search" placeholder="Busqueda" aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </nav>
 <header class="background-page">
   <div class="background-over">
-  <form class="container">
+  <form class="container" action="/tatinspizza.com/inicio_sesion" method="POST">
+    {%csrf_token%}
     <br><h3>Iniciar Sesion</h3>
     <div class="container mt-5">
-     <label for="exampleInputEmail1" class="form-label">Email</label>
-      <input type="email" class="form-control" id="">
+     <label class="form-label">Email</label>
+      <input type="email" class="form-control" name="correo">
     </div>
     <div class="container mt-3">
-      <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-      <input type="password" class="form-control" id="" >
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" name="contrasena" >
     </div>
     <div class="container">
       <button type="submit" class="btn btn-danger mt-5">Enviar</button>
@@ -35,4 +74,15 @@
   </div>
 </header>
 </body>
+<style>
+  .background-page{
+    background: url(/static/fondo-pizza.jpg);
+    background-size: cover;
+    min-height: 652.5px;
+}
+.background-over{
+    background: rgba(236, 240, 241,.30);
+    min-height: 652.5px;
+}
+</style>
 </html>

@@ -1,4 +1,5 @@
-<table></table><!DOCTYPE html>
+{%load static%}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,12 +10,49 @@
     <title>MiPerfil</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-danger">
-        <div class="container-fluid">
-          <a class="navbar-brand" href=""><img src="../imgenes/Logo_Tatin_.png" alt="Tatin's Pizza Icon" style="width: 15%;"></a>
-          <a>Bienvenido {user}</a>
-        </div>
-      </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/tatinspizza.com"><img src="{% static 'LogoTatin.png' %}" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/cuenta">Mi Perfil</a>
+          </li>
+          {% enif %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/menu">Menu</a>
+          </li>
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/carrito">Carrito</a>
+          </li>
+          {% enif %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Sesion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {%if isLogged==false%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/inicio_sesion">Iniciar sesion</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Regisarse</a></li>
+              {% enif %}
+              {%if isLogged%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/cerrear_sesion">Cerrar Sesion</a></li>
+              {% enif %}
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex mt-2">
+          <input class="form-control me-2 " type="search" placeholder="Busqueda" aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </nav>
     <header class="background-page">
       <div class="background-over">
       <div class="container">
@@ -22,29 +60,29 @@
         <div class="card mt-5" >
         <div class="card-header bg-danger">Nombre</div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">Luchito Millones</li>
-        </ul>
-      </div>
-      <div class="card mt-4" >
-        <div class="card-header bg-danger">Usuario</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Milloncitos69</li>
+          <li class="list-group-item">{{usuario.nombre}}</li>
         </ul>
       </div>
       <div class="card mt-4" >
         <div class="card-header bg-danger">Email</div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">LuchitoMillones@gmail.com</li>
+          <li class="list-group-item">{{usuario.correo}}</li>
         </ul>
       </div>
-      <div class="card mt-4" >
-        <div class="card-header bg-danger">TantinCoins</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">$10000 </li>
-        </ul>
-      </div>
+      <a href="/tatinspizza/editar_perfil" class="btn btn-danger mt-5">Editar Datos</a>
     </div>
   </div>
   </header>
-</body>
+</body> 
+<style>
+  .background-page{
+    background: url(/static/fondo-pizza.jpg);
+    background-size: cover;
+    min-height: 652.5px;
+}
+.background-over{
+    background: rgba(236, 240, 241,.30);
+    min-height: 652.5px;
+}
+</style>
 </html>
