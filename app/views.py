@@ -1,6 +1,7 @@
 from app.models import Comentario, Comida, Usuario
 from django.shortcuts import redirect, render
 from django.http import JsonResponse, HttpResponse
+
 #Librerias PDF
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -16,79 +17,108 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+# ----Usuario actual----
 
-#----Usuario actual----
+
 class Usuario_actual:
-	id = 0
-	logeado = False
+    id = 1
+    logeado = False
+
 
 usuario_actual = Usuario_actual()
 
-#----Visitante----
-#Incompleto
-def index(request):
-    return render(request,"index.html")
+# ----Carrito----
+pedido = []
+cantidad = []
 
-#Casi-Completo (falta verificacion de correo)
+# ----Visitante----
+# Incompleto
+
+
+def index(request):
+    comentarios = Comentario.objects.all()
+
+    contexto = {
+        "comentarios": comentarios,
+    }
+    return render(request, "index.html", contexto)
+
+# Casi-Completo (falta verificacion de correo)
+
+
 def registro(request):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
+        contrasena1 = request.POST["contrasena1"]
+        contrasena2 = request.POST["contrasena2"]
 
-        if Usuario.objects.filter(correo = correo).exist():
-            return redirect("tatinspizza.com/registro")
+        if Usuario.objects.filter(correo=correo).exists() or contrasena1 != contrasena2:
+    
+            return redirect("/tatinspizza.com/registro")
 
         nuevo_usuario = Usuario()
         nuevo_usuario.nombre = nombre
         nuevo_usuario.correo = correo
-        nuevo_usuario.contrasena = contrasena
+        nuevo_usuario.contrasena = contrasena1
         nuevo_usuario.save()
 
-        return redirect("tatinspizza.com/inicio_sesion")
-    
-    return render(request,"registro.html")
+        enviar_bienvenida(correo)
 
-#Incompleto (falta redirijir al iniciar sesion)
+        return redirect("/tatinspizza.com")
+
+    return render(request, "registro.html")
+
+# Incompleto (falta redirijir al iniciar sesion)
+
+
 def inicio_sesion(request):
     if request.method == "POST":
         correo = request.POST["correo"]
         contrasena = request.POST["contrasena"]
 
-        if Usuario.objects.filter(correo = correo,contrasena = contrasena).exists():
-            usuario = Usuario.objects.get(correo = correo)
+        if Usuario.objects.filter(correo=correo, contrasena=contrasena).exists():
+            usuario = Usuario.objects.get(correo=correo)
             usuario_actual.id = usuario.id_usuario
             usuario_actual.logeado = True
 
-            return redirect("")
+            return redirect("index.html")
 
-    return render(request,"inicio_sesion.html")
+    return render(request, "inicio_sesion.html")
 
-#Completo
+# Completo
+
+
 def menu(request):
     comidas = Comida.objects.all()
 
     contexto = {
-        "comidas" : comidas,
+        "comidas": comidas,
     }
 
-    return render(request,"menu.html",contexto)
+    return render(request, "menu.html", contexto)
 
-#Completo
-def comida(request,id):
-    comida = Comida.objects.get(id_comida = id)
+# Completo
+
+
+def comida(request, id):
+    comida = Comida.objects.get(id_comida=id)
 
     contexto = {
-        "comida" : comida,
+        "comida": comida,
     }
 
-    return render(request,"comida.html",contexto)
+    return render(request, "comida.html", contexto)
 
-#completo
+# completo
+
+
 def busqueda(request):
-    return render(request,"comida.html")
+    return render(request, "comida.html")
 
-#Completo
+# Completo
+
+
 def resultado_busqueda(request):
     if request.method == "POST":
         nombre = request.POST["nombre"]
@@ -96,27 +126,191 @@ def resultado_busqueda(request):
         comidas = Comida.objects.filter(nombre__icontains=nombre)
 
         contexto = {
-            "comidas" : comidas,
+            "comidas": comidas,
         }
 
-        return render(request,"resultado_busqueda.html",contexto)
+        return render(request, "resultado_busqueda.html", contexto)
 
     return redirect("tatinspizza.com/busqueda")
 
 
-#----Cliente----
+# ----Cliente----
 
-#Incompleto
-def pedir(request,id):
-    return render(request,"pedir.html")
 
-#Incompleto
-def cuenta(request,id):
-    return render(request,"cuenta.html")
+# Incompleto
+def cuenta(request, id):
+    usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
 
-#Incompleto
-def carrito(request,id):
-    return render(request,"carrito.html")
+    contexto = {
+        "usuario": usuario,
+    }
+
+    return render(request, "cuenta.html", contexto)
+
+# Incompleto
+
+
+def carrito(request):
+
+    return render(request, "carrito.html")
+
+# Incompleto
+
+
+def agregar_al_carrito(request, id):
+    comida = Comida.objects.get(id_comida=id)
+
+    if comida in pedido:
+        indice = pedido.index(comida)
+        aumentar_al_carrito(indice)
+
+    else:
+        pedido.append(comida)
+        cantidad.append(1)
+
+    return redirect("tatinspizza.com/menu")
+
+
+def aumentar_al_carrito(indice):
+    cantidad[indice] += 1
+
+    return redirect("tatinspizza.com/carrito")
+
+
+def disminuir_al_carrito(request, id):
+    comida = Comida.objects.get(id_comida=id)
+    indice = pedido.index(comida)
+
+    if (cantidad[indice] == 1):
+        quitar_al_carrito(indice)
+
+    else:
+        cantidad[indice] -= 1
+
+    return redirect("tatinspizza.com/carrito")
+
+
+def quitar_al_carrito(indice):
+    pedido.pop(indice)
+    cantidad.pop(indice)
+
+    return redirect("tatinspizza.com/carrito")
+
+
+# Incompleto
+def boleta(request, id):
+    return render(request, "boleta.html")
+
+# Casi-Completo
+
+
+def comentario(request):
+    if request.method == "POST":
+        usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
+        texto = request.POST["texto"]
+
+        nuevo_comentario = Comentario()
+        nuevo_comentario.texto = texto
+        nuevo_comentario.usuario = usuario
+        nuevo_comentario.save()
+
+    return redirect("index.html")
+
+
+# ----Administrador----
+
+# --Comida--
+def monitoreo_comidas(request):
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+        descripcion = request.POST["descripcion"]
+        precio = request.POST["precio"]
+
+        nueva_comida = Comida()
+        nueva_comida.nombre = nombre
+        nueva_comida.descripcion = descripcion
+        nueva_comida.precio = precio
+        nueva_comida.save()
+
+        return redirect("tatinspizza.com/monitoreo_comidas")
+
+    comidas = Comida.objects.all()
+
+    contexto = {
+        "comidas": comidas,
+    }
+
+    return render(request, "monitoreo_comidas.html", contexto)
+
+
+def editar_Comida(request, id):
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+        descripcion = request.POST["descripcion"]
+        precio = request.POST["precio"]
+
+        actualizar_comida = Comida.objects.get(id_comida=id)
+        actualizar_comida.nombre = nombre
+        actualizar_comida.descripcion = descripcion
+        actualizar_comida.precio = precio
+        actualizar_comida.save()
+        return redirect("tatinspizza.com/monitoreo_comidas")
+
+    comida = Comida.objects.get(id_comida=id)
+
+    contexto = {
+        "comida": comida,
+    }
+
+    return render(request, "editar_comida.html", contexto)
+
+# --Cliente--
+
+
+def monitoreo_cliente(request):
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+        correo = request.POST["correo"]
+        contrasena = request.POST["contrasena"]
+
+        nuevo_usuario = Usuario()
+        nuevo_usuario.nombre = nombre
+        nuevo_usuario.correo = correo
+        nuevo_usuario.contrasena = contrasena
+        nuevo_usuario.save()
+
+        return redirect("tatinspizza.com/monitoreo_clientes")
+
+    clientes = Usuario.objects.all()
+
+    contexto = {
+        "clientes": clientes,
+    }
+
+    return render(request, "monitoreo_clientes.html", contexto)
+
+
+def editar_cliente(request, id):
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+        correo = request.POST["correo"]
+        contrasena = request.POST["contrasena"]
+
+        actualizar_usuario = Usuario.objects.get(id_usuario=id)
+        actualizar_usuario.nombre = nombre
+        actualizar_usuario.correo = correo
+        actualizar_usuario.contrasena = contrasena
+        actualizar_usuario.save()
+
+        return redirect("tatinspizza.com/monitoreo_clientes")
+
+    cliente = Usuario.objects.get(id_usuario=id)
+
+    contexto = {
+        "cliente": cliente,
+    }
+
+    return render(request, "editar_cliente.html", contexto)
 
 #Incompleto
 def boleta(request):
@@ -140,136 +334,15 @@ def boleta(request):
 
     pisaStatus = pisa.CreatePDF(html, dest=file, link_callback=template)
  
-    getCorreo(RUTA)
+    enviar_boleta(RUTA)
    
     if pisaStatus.err:
         return HttpResponse('Error <pre>',html,'</pre>')
 
     
     return render(request,"boleta_impresa.html")
-#Casi-Completo
-def comentario(request):
-    
-    if request.method == "POST":
-        usuario = Usuario.objects.get(id_usuario = usuario_actual.id)
-        comentario = request.POST["comentario"]
 
-        nuevo_comentario = Comentario()
-        nuevo_comentario.comentario = comentario
-        nuevo_comentario.usuario = usuario
-        nuevo_comentario.save()
-
-        return redirect("tatinspizza.com/comentarios")
-
-    comentarios = Comentario.objects.all()
-
-    contexto = {
-        "comentarios" : comentarios,
-    }
-
-    return render(request,"comentarios.html",contexto)
-
-
-#----Administrador----
-
-#--Comida--
-def monitoreo_comida(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        descripcion = request.POST["descripcion"]
-        ingredientes = request.POST["ingredientes"]
-        precio = request.POST["precio"]
-        
-
-        nueva_comida = Comida()
-        nueva_comida.nombre= nombre
-        nueva_comida.descripcion = descripcion
-        nueva_comida.ingredientes = ingredientes
-        nueva_comida.precio = precio
-        nueva_comida.save()
-
-        return redirect("tatinspizza.com/monitoreo_comidas")
-
-    comidas = Comida.objects.all()
-
-    contexto = {
-        "comidas" : comidas,
-    }
-
-    return render(request,"monitoreo_comidas.html",contexto)
-
-def editar_comida(request,id):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        descripcion = request.POST["descripcion"]
-        ingredientes = request.POST["ingredientes"]
-        precio = request.POST["precio"]
-
-
-        actualizar_comida = Comida.objects.get(id_comida = id)
-        actualizar_comida.nombre= nombre
-        actualizar_comida.descripcion = descripcion
-        actualizar_comida.ingredientes = ingredientes
-        actualizar_comida.precio = precio
-        actualizar_comida.save()
-        return redirect("tatinspizza.com/monitoreo_comidas")
-
-
-    comida = Comida.objects.get(id_comida = id)
-
-    contexto = {
-        "comida" : comida,
-    }
-
-    return render(request,"editar_comida.html",contexto)
-
-#--Cliente--
-
-def monitoreo_cliente(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
-
-        nuevo_usuario = Usuario()
-        nuevo_usuario.nombre = nombre
-        nuevo_usuario.correo = correo
-        nuevo_usuario.contrasena = contrasena
-        nuevo_usuario.save()
-        
-        return redirect("tatinspizza.com/monitoreo_clientes")
-
-    clientes = Usuario.objects.all()
-
-    contexto = {
-        "clientes" : clientes,
-    }
-
-    return render(request,"monitoreo_clientes.html",contexto)
-
-def editar_cliente(request,id):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
-
-        actualizar_usuario = Usuario.objects.get(id_usuario = id)
-        actualizar_usuario.nombre = nombre
-        actualizar_usuario.correo = correo
-        actualizar_usuario.contrasena = contrasena
-        actualizar_usuario.save()
-
-        return redirect("tatinspizza.com/monitoreo_clientes")
-
-    cliente = Usuario.objects.get(id_usuario = id)
-
-    contexto = {
-        "cliente" : cliente,
-    }
-
-    return render(request,"editar_cliente.html",contexto)
-
-def getCorreo(RUTA):
+def enviar_boleta(RUTA):
     remitente = 'tatinspizza@gmail.com'
     destinatarios = ['r.millanao02@ufromail.cl',]
     asunto = '[Boleta] Tatin´s Pizza'
@@ -277,7 +350,6 @@ def getCorreo(RUTA):
 
     # Creamos el objeto mensaje
     mensaje = MIMEMultipart()
-    
     # Establecemos los atributos del mensaje
     mensaje['From'] = remitente
     mensaje['To'] = ", ".join(destinatarios)
@@ -285,10 +357,8 @@ def getCorreo(RUTA):
     
     # Agregamos el cuerpo del mensaje como objeto MIME de tipo texto
     mensaje.attach(MIMEText(cuerpo, 'plain'))
-    
     # Abrimos el archivo que vamos a adjuntar
     archivo_adjunto = open('C:/Users/javie/Desktop/tatinbd.png', 'rb')
-    
     # Creamos un objeto MIME base
     adjunto_MIME = MIMEBase('application', 'octet-stream')
     # Y le cargamos el archivo adjunto
@@ -299,21 +369,40 @@ def getCorreo(RUTA):
     adjunto_MIME.add_header('Content-Disposition', "attachment; filename= {0}".format(os.path.basename(RUTA+str("/boleta.pdf"))))
     # Y finalmente lo agregamos al mensaje
     mensaje.attach(adjunto_MIME)
-    
     # Creamos la conexión con el servidor
     sesion_smtp = smtplib.SMTP('smtp.gmail.com', 587)
-    
     # Ciframos la conexión
     sesion_smtp.starttls()
-
     # Iniciamos sesión en el servidor con el correo y contraseña
     sesion_smtp.login('tatinspizza@gmail.com','laspizzadeltatin')
-
     # Convertimos el objeto mensaje a texto
     texto = mensaje.as_string()
-
     # Enviamos el mensaje
     sesion_smtp.sendmail(remitente, destinatarios, texto)
+    # Cerramos la conexión
+    sesion_smtp.quit()
 
+def enviar_bienvenida(correo):
+    remitente = 'tatinspizza@gmail.com'
+    destinatario = correo
+    asunto = '[Bienvenida]'
+    cuerpo = 'Bienvenido/a a Tatin´s Pizza, se ha registrado como usuario en nuestra sistema web. Lo invitamos cordialmente a desgustar nuestros famosas pizzas\nAtte. Tatin´s Pizza Workers'
+    # Creamos el objeto mensaje
+    mensaje = MIMEMultipart()
+    # Establecemos los atributos del mensaje
+    mensaje['From'] = remitente
+    mensaje['To'] = destinatario
+    mensaje['Subject'] = asunto
+    mensaje.attach(MIMEText(cuerpo, 'plain'))
+
+    sesion_smtp = smtplib.SMTP('smtp.gmail.com', 587)
+    # Ciframos la conexión
+    sesion_smtp.starttls()
+    # Iniciamos sesión en el servidor con el correo y contraseña
+    sesion_smtp.login('tatinspizza@gmail.com','laspizzadeltatin')
+    # Convertimos el objeto mensaje a texto
+    texto = mensaje.as_string()
+    # Enviamos el mensaje
+    sesion_smtp.sendmail(remitente, destinatario,texto)
     # Cerramos la conexión
     sesion_smtp.quit()
