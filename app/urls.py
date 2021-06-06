@@ -20,7 +20,9 @@ urlpatterns = [
     
     path('tatinspizza.com/monitoreo_usuarios',views.monitoreo_usuarios),
     path('tatinspizza.com/eliminar_usuario/<int:id>',views.eliminar_usuario),
-    path('tatinspizza.com/comidas',views.monitoreo_comidas),
+    path('tatinspizza.com/monitoreo_comidas',views.monitoreo_comidas),
+    path('tatinspizza.com/eliminar_comida/<int:id>',views.eliminar_comida),
+    path('tatinspizza.com/crear_comida',views.crear_comida),
     path('tatinspizza.com/editar_usuario/<int:id>',views.editar_usuario),
     path('tatinspizza.com/editar_comida/<int:id>',views.editar_comida),
    

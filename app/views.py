@@ -98,17 +98,6 @@ def menu(request):
 
     return render(request, "menu.html", contexto)
 
-# Completo
-
-
-def comida(request, id):
-    comida = Comida.objects.get(id_comida=id)
-
-    contexto = {
-        "comida": comida,
-    }
-
-    return render(request, "comida.html", contexto)
 
 # completo
 
@@ -214,18 +203,6 @@ def comentario(request):
 
 # --Comida--
 def monitoreo_comidas(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        descripcion = request.POST["descripcion"]
-        precio = request.POST["precio"]
-
-        nueva_comida = Comida()
-        nueva_comida.nombre = nombre
-        nueva_comida.descripcion = descripcion
-        nueva_comida.precio = precio
-        nueva_comida.save()
-
-        return redirect("tatinspizza.com/monitoreo_comidas")
 
     comidas = Comida.objects.all()
 
@@ -235,6 +212,31 @@ def monitoreo_comidas(request):
 
     return render(request, "monitoreo_comidas.html", contexto)
 
+def eliminar_comida(request,id):
+
+    comida = Comida.objects.get(id_comida = id)
+    comida.delete()
+
+    return redirect("/tatinspizza.com/monitoreo_comidas")
+
+def crear_comida(request):
+    if request.method == "POST":
+        nombre = request.POST["nombre"]
+        descripcion = request.POST["descripcion"]
+        precio = request.POST["precio"]
+
+        if Comida.objects.filter(nombre=nombre).exists():
+            return redirect("/tatinspizza.com/crear_comida")
+
+        nueva_comida = Comida()
+        nueva_comida.nombre = nombre
+        nueva_comida.descripcion = descripcion
+        nueva_comida.precio = precio
+        nueva_comida.save()
+
+        return redirect("/tatinspizza.com/monitoreo_comidas")
+
+    return render(request,"crear_comida.html")
 
 def editar_comida(request, id):
     if request.method == "POST":
@@ -247,7 +249,9 @@ def editar_comida(request, id):
         actualizar_comida.descripcion = descripcion
         actualizar_comida.precio = precio
         actualizar_comida.save()
-        return redirect("tatinspizza.com/monitoreo_comidas")
+
+        
+        return redirect("/tatinspizza.com/monitoreo_comidas")
 
     comida = Comida.objects.get(id_comida=id)
 
@@ -261,18 +265,6 @@ def editar_comida(request, id):
 
 
 def monitoreo_usuarios(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
-
-        nuevo_usuario = Usuario()
-        nuevo_usuario.nombre = nombre
-        nuevo_usuario.correo = correo
-        nuevo_usuario.contrasena = contrasena
-        nuevo_usuario.save()
-
-        return redirect("tatinspizza.com/monitoreo_usuarios")
 
     usuarios = Usuario.objects.all()
 
@@ -293,20 +285,25 @@ def editar_usuario(request, id):
     if request.method == "POST":
         nombre = request.POST["nombre"]
         correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
+        contrasena2 = request.POST["contrasena1"]
+        contrasena1 = request.POST["contrasena2"]
+
+        
+        if contrasena1 != contrasena2:
+            return redirect("/tatinspizza.com/editar_usuario/"+str(id))
 
         actualizar_usuario = Usuario.objects.get(id_usuario=id)
         actualizar_usuario.nombre = nombre
         actualizar_usuario.correo = correo
-        actualizar_usuario.contrasena = contrasena
+        actualizar_usuario.contrasena = contrasena1
         actualizar_usuario.save()
 
-        return redirect("tatinspizza.com/monitoreo_clientes")
+        return redirect("/tatinspizza.com/monitoreo_usuarios")
 
-    cliente = Usuario.objects.get(id_usuario=id)
+    usuario = Usuario.objects.get(id_usuario=id)
 
     contexto = {
-        "cliente": cliente,
+        "usuario": usuario,
     }
 
     return render(request, "editar_usuario.html", contexto)

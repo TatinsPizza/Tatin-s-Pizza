@@ -57,20 +57,20 @@
       <header class="background-page">
         <div class="background-over">
           
-    <form class="container" action="/tatinspizza.com/editar_cliente" method="POST">
+    <form class="container" action="/tatinspizza.com/editar_usuario/{{usuario.id_usuario}}" method="POST">
       {%csrf_token%}
       <br><h3>Editar Usuario</h3>
         <div class="mb-3 mt-4">
             <label>Nombre</label>
-            <input type="text" class="form-control" minlength="1" name="nombre" value="{{usuario.nombre}}">
+            <input type="text" class="form-control" minlength="1" name="nombre" id="nombre" value="{{usuario.nombre}}">
           </div>
         <div class="mb-3">
           <label>Email</label>
-          <input type="text" class="form-control" minlength="1" name="correo" value="{{usuario.correo}}">
+          <input type="text" class="form-control" minlength="1" name="correo" id="correo" value="{{usuario.correo}}">
         </div>
         <div class="mb-3">
           <label>Password</label>
-          <input type="password" class="form-control" minlength="1" name="contrasena1" value="{{usuario.contrasena}}">
+          <input type="password" class="form-control" minlength="1" name="contrasena1"  value="{{usuario.contrasena}}">
           <div id="passHelp" class="form-text-black">Considere minimo 6 caracteres </div>
         </div>
         <div class="mb-3">
@@ -80,7 +80,7 @@
           </div>
         <div class="mt-5">
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
-        <a href="/tatinspizza.com/perfil" class="btn btn-danger"> Cancelar</a>
+        <a href="/tatinspizza.com/monitoreo_usuarios" class="btn btn-danger"> Cancelar</a>
       </div>
       </form>
       </div>
