@@ -71,8 +71,8 @@
                   {%for comida in comidas%}
                   <tr>
                     <th scope="row">{{comida.nombre}}</th>
-                    <td>{{comida.precio}}</td>
                     <td>{{comida.descripcion}}</td>
+                    <td>${{comida.precio}}</td>
                     <td>
                       <a href="/tatinspizza.com/editar_comida/{{comida.id_comida}}" class="btn btn-success">Editar</a>
                       <a href="/tatinspizza.com/eliminar_comida/{{comida.id_comida}}" class="btn btn-danger">Eliminar</a>
