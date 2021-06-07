@@ -35,97 +35,6 @@ cantidad = []
 # Incompleto
 
 
-def index(request):
-    comentarios = Comentario.objects.all()
-
-    contexto = {
-        "comentarios": comentarios,
-    }
-    return render(request, "index.html", contexto)
-
-# Casi-Completo (falta verificacion de correo)
-
-
-def registro(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-        correo = request.POST["correo"]
-        contrasena1 = request.POST["contrasena1"]
-        contrasena2 = request.POST["contrasena2"]
-
-        if Usuario.objects.filter(correo=correo).exists() or contrasena1 != contrasena2:
-    
-            return redirect("/tatinspizza.com/registro")
-
-        nuevo_usuario = Usuario()
-        nuevo_usuario.nombre = nombre
-        nuevo_usuario.correo = correo
-        nuevo_usuario.contrasena = contrasena1
-        nuevo_usuario.save()
-
-        enviar_bienvenida(correo)
-
-        return redirect("/tatinspizza.com")
-
-    return render(request, "registro.html")
-
-# Incompleto (falta redirijir al iniciar sesion)
-
-
-def inicio_sesion(request):
-    if request.method == "POST":
-        correo = request.POST["correo"]
-        contrasena = request.POST["contrasena"]
-
-        if Usuario.objects.filter(correo=correo, contrasena=contrasena).exists():
-            usuario = Usuario.objects.get(correo=correo)
-            usuario_actual.id = usuario.id_usuario
-            usuario_actual.logeado = True
-
-            return redirect("index.html")
-
-    return render(request, "inicio_sesion.html")
-
-# Completo
-
-
-def menu(request):
-    comidas = Comida.objects.all()
-
-    contexto = {
-        "comidas": comidas,
-    }
-
-    return render(request, "menu.html", contexto)
-
-
-# completo
-
-
-def busqueda(request):
-    return render(request, "comida.html")
-
-# Completo
-
-
-def resultado_busqueda(request):
-    if request.method == "POST":
-        nombre = request.POST["nombre"]
-
-        comidas = Comida.objects.filter(nombre__icontains=nombre)
-
-        contexto = {
-            "comidas": comidas,
-        }
-
-        return render(request, "resultado_busqueda.html", contexto)
-
-    return redirect("tatinspizza.com/busqueda")
-
-
-# ----Cliente----
-
-
 # Incompleto
 def mi_perfil(request):
     usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
@@ -136,72 +45,10 @@ def mi_perfil(request):
 
     return render(request, "mi_perfil.html", contexto)
 
-# Incompleto
-
-
-def carrito(request):
-
-    return render(request, "carrito.html")
-
-# Incompleto
-
-
-def agregar_al_carrito(request, id):
-    comida = Comida.objects.get(id_comida=id)
-
-    if comida in pedido:
-        indice = pedido.index(comida)
-        aumentar_al_carrito(indice)
-
-    else:
-        pedido.append(comida)
-        cantidad.append(1)
-
-    return redirect("tatinspizza.com/menu")
-
-
-def aumentar_al_carrito(indice):
-    cantidad[indice] += 1
-
-    return redirect("tatinspizza.com/carrito")
-
-
-def disminuir_al_carrito(request, id):
-    comida = Comida.objects.get(id_comida=id)
-    indice = pedido.index(comida)
-
-    if (cantidad[indice] == 1):
-        quitar_al_carrito(indice)
-
-    else:
-        cantidad[indice] -= 1
-
-    return redirect("tatinspizza.com/carrito")
-
-
-def quitar_al_carrito(indice):
-    pedido.pop(indice)
-    cantidad.pop(indice)
-
-    return redirect("tatinspizza.com/carrito")
-
-
-def comentario(request):
-    if request.method == "POST":
-        usuario = Usuario.objects.get(id_usuario=usuario_actual.id)
-        texto = request.POST["texto"]
-
-        nuevo_comentario = Comentario()
-        nuevo_comentario.texto = texto
-        nuevo_comentario.usuario = usuario
-        nuevo_comentario.save()
-
-    return redirect("index.html")
 
 
 # ----Administrador----
 
-# --Comida--
 def monitoreo_comidas(request):
     #Obtenemos todas las comidas desde la base de datos
     comidas = Comida.objects.all()
@@ -335,38 +182,49 @@ def editar_usuario(request, id):
     #en primera instancia se renderizara hacia la template
     return render(request, "editar_usuario.html", contexto)
 
-def boleta(request):
-    #Provisorio
+def boleta():
+
+    #cliente que pide la comida
     comidas = ['churrasssco','Chacarero','Lomito','Bebida','Café']
     descripciones = [1233124,123123,123123,12312,123123]
 
+    #Datos utilizados para obtener el tiempo y fecha donde se ha realizado la boleta
     ahora = datetime.now()
     fecha = ahora.strftime('%d/%m/%Y')
     hora = ahora.strftime('%H:%M')
     
+    #Obtenemos la template donde tenemos nuestra estructura de la boleta
     template = get_template('../templates/boleta.html')
+    #creamos un diccionario con los datos que queremos imprimir en la boleta
     context = {'title': 'primer titulo','comidas':comidas,'descripcion':'precios','subtotal':12312,'total':13123,'impuesto':1231, 'fecha':fecha,'hora':hora}
     html = template.render(context)
 
+    #IMPORTANTE: parametro ruta es la ruta donde queremos guardar nuestra boleta temporal, 
+    #en este caso será la ruta donde se encuentra el proyecto en una carpteta /temp
     RUTA = "C:/Users/javie/OneDrive/Python/Tatins_Pizza/app/temp"
     file = open(os.path.join(RUTA, str('boleta') + '.pdf'), "w+b")
-  
+    
+    #Creamos la boleta con pisaStatus
     pisaStatus = pisa.CreatePDF(
         html,dest=file)
 
     pisaStatus = pisa.CreatePDF(html, dest=file, link_callback=template)
- 
-    enviar_boleta(RUTA)
+    
+    #Utilizamos el metodo para enviar nuestra boleta por correo
+    enviar_boleta(RUTA,'r.millanao02@ufromail.cl')
    
+    #validacion de un error
     if pisaStatus.err:
         return HttpResponse('Error <pre>',html,'</pre>')
 
-    
-    return render(request,"boleta_impresa.html")
 
-def enviar_boleta(RUTA):
+def enviar_boleta(RUTA,correo):
+    #IMPORTANTE: parametro ruta es la ruta donde queremos guardar nuestra boleta temporal, 
+    #en este caso será la ruta donde se encuentra el proyecto en una carpteta /temp
+
+    #Datos usados para enviar gmail
     remitente = 'tatinspizza@gmail.com'
-    destinatarios = ['r.millanao02@ufromail.cl',]
+    destinatario = correo
     asunto = '[Boleta] Tatin´s Pizza'
     cuerpo = 'Muchas Gracias por preferir Tatin´s Pizza, A continuacion adjuntamos su boleta:'
 
@@ -374,13 +232,11 @@ def enviar_boleta(RUTA):
     mensaje = MIMEMultipart()
     # Establecemos los atributos del mensaje
     mensaje['From'] = remitente
-    mensaje['To'] = ", ".join(destinatarios)
+    mensaje['To'] = destinatario
     mensaje['Subject'] = asunto
     
     # Agregamos el cuerpo del mensaje como objeto MIME de tipo texto
     mensaje.attach(MIMEText(cuerpo, 'plain'))
-    # Abrimos el archivo que vamos a adjuntar
-    archivo_adjunto = open('C:/Users/javie/Desktop/tatinbd.png', 'rb')
     # Creamos un objeto MIME base
     adjunto_MIME = MIMEBase('application', 'octet-stream')
     # Y le cargamos el archivo adjunto
@@ -400,7 +256,7 @@ def enviar_boleta(RUTA):
     # Convertimos el objeto mensaje a texto
     texto = mensaje.as_string()
     # Enviamos el mensaje
-    sesion_smtp.sendmail(remitente, destinatarios, texto)
+    sesion_smtp.sendmail(remitente, destinatario, texto)
     # Cerramos la conexión
     sesion_smtp.quit()
 
