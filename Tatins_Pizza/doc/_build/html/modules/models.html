@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Models &#8212; documentación de Tatins_Pizza - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Views" href="views.html" />
+    <link rel="prev" title="Herramientas de desarrollo" href="requerimientos.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="models">
+<h1><strong>Models</strong><a class="headerlink" href="#models" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Modelos utilizados en nuestro proyecto</p>
+<section id="usuario">
+<h2>Usuario<a class="headerlink" href="#usuario" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Sujeto que usa la página y que realiza las acciones dentro de la plataforma.</p>
+<ul class="simple">
+<li><p><strong>id_usuario</strong>: clave primaria.</p></li>
+<li><p><strong>nombre</strong>: nombre del usuario que usa la plataforma.</p></li>
+<li><p><strong>correo</strong>: email del usuario.</p></li>
+<li><p><strong>contrasena</strong>: clave del usuario para ingresar a la .</p></li>
+<li><p><strong>admin</strong>: campo utilizado para evaluar permiso de administrador</p></li>
+</ul>
+</section>
+<section id="comentario">
+<h2>Comentario<a class="headerlink" href="#comentario" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Corresponden a los comentarios de los clientes registrados en el sistema</p>
+<ul class="simple">
+<li><p><strong>id_comentario</strong>: clave primaria.</p></li>
+<li><p><strong>texto</strong>: cuerpo del comentario.</p></li>
+<li><p><strong>usuario</strong>: usuario quien publica.</p></li>
+</ul>
+</section>
+<section id="pedido">
+<h2>Pedido<a class="headerlink" href="#pedido" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Objeto utilizado para llevar el registro de una compra</p>
+<ul class="simple">
+<li><p><strong>id</strong>: clave primaria.</p></li>
+<li><p><strong>fecha</strong>: registra cuando fue realizada la compra.</p></li>
+</ul>
+</section>
+<section id="comida">
+<h2>Comida<a class="headerlink" href="#comida" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Comida es la comida del restaurante</p>
+<ul class="simple">
+<li><p><strong>id_comida</strong>: clave primaria.</p></li>
+<li><p><strong>nombre</strong>: nombre de la comida.</p></li>
+<li><p><strong>descripcion</strong>: cuerpo que describe la comdia.</p></li>
+<li><p><strong>precio</strong>: valor de la comida.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Tatins_Pizza</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="requerimientos.html"><strong>Herramientas de desarrollo</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="requerimientos.html#arquitectura"><strong>Arquitectura</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>Models</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usuario">Usuario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comentario">Comentario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pedido">Pedido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comida">Comida</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="views.html"><strong>Views</strong></a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="requerimientos.html" title="capítulo anterior"><strong>Herramientas de desarrollo</strong></a></li>
+      <li>Next: <a href="views.html" title="próximo capítulo"><strong>Views</strong></a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Devs.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/modules/models.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
