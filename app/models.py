@@ -46,18 +46,8 @@ class Pedido(models.Model):
     # definimos "id_pedido" como primary key
     id_pedido = models.AutoField(primary_key=True)
 
-    # Definimos "entregado" como un campo del tipo SmallInteger (se usara como un Boolean)
-    entregado = models.SmallIntegerField(default= 0)
-
     # Definimos "fecha" como un campo del tipo Date
     fecha = models.DateTimeField(auto_now_add=True)
-
-    # Este metodo nos retornara el campo "entregado" como boolean
-    def isEntregado(self):
-        if self.admin == 0:
-            return False
-        else:
-            return True
 
 
 # Modelo Comida

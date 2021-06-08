@@ -52,6 +52,20 @@
 
             </ul>
           </li>
+          {%if isAdmin%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Administracion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_clientes">Monitorear
+                  Clientes</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_comidas">Monitorear Comida</a>
+              </li>
+            </ul>
+          </li>
+          {% endif %}
         </ul>
         <form class="d-flex mt-2" action="/tatinspizza.com/resultado_busqueda" method="POST">
           {%csrf_token%}
@@ -65,6 +79,7 @@
   <header class="background-page">
     <div class="background-over py-3">
       <h3 class="mx-3"> Carrito</h3>
+
       {% for pedido in carrito %}
       <div class="card mx-5 mt-5" style="width: 18rem;">
         <div class="card-body">
@@ -84,7 +99,7 @@
       {% if carrito %}
       <div class="py-5">
         <div class="d-flex justify-content-end mx-5">
-          <a href="/tatinspizza.com/gracias" class="btn btn-primary">Realizar Pedido</a>
+          <a href="/tatinspizza.com/gracias" class="btn btn-warning">Realizar Pedido</a>
         </div>
       </div>
       {% endif %}

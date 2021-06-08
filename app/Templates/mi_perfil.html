@@ -52,6 +52,20 @@
 
             </ul>
           </li>
+          {%if isAdmin%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Administracion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_clientes">Monitorear
+                  Clientes</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_comidas">Monitorear Comida</a>
+              </li>
+            </ul>
+          </li>
+          {% endif %}
         </ul>
         <form class="d-flex mt-2" action="/tatinspizza.com/resultado_busqueda" method="POST">
           {%csrf_token%}
@@ -79,7 +93,7 @@
             <li class="list-group-item">{{usuario.correo}}</li>
           </ul>
         </div>
-        <a href="/tatinspizza/editar_perfil" class="btn btn-danger mt-5">Editar Datos</a>
+        <a href="/tatinspizza.com/editar_cliente/{{usuario.id_usuario}}" class="btn btn-danger mt-5">Editar Datos</a>
       </div>
     </div>
   </header>

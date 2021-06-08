@@ -1,14 +1,16 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <link rel="stylesheet" href="../Estilo.css">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <title>Tatin's Pizza</title>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-danger">
         <div class="container-fluid">
@@ -74,40 +76,29 @@
           </div>
         </div>
       </nav>
-      <header class="background-page">
-        <div class="background-over py-3">
-
-      <form class="container" action="/tatinspizza.com/editar_comida/{{comida.id_comida}}" method="POST">
-        {%csrf_token%}
-        <br><h3>Editar Comida</h3>
-          <div class="mb-3 mt-4">
-              <label for="exampleInputEmail1" class="form-label">Nombre</label>
-              <input type="text" class="form-control" minlength="1" name="nombre" value="{{comida.nombre}}">
+    <header class="main-header">
+        <div class="background-overlay  text-center text-black py-5">
+            <div class="container">
+                <h3>Muchas gracias por comprar en tatins pizza</h3>
+                <h5>Su boleta ha sido enviada al correo electronico</h5>
             </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Descripcion </label>
-              <input type="text" class="form-control"  minlength="1" name="descripcion" value="{{comida.descripcion}}">
-            </div>
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Precio</label>
-            <input type="text" class="form-control" name="precio" minlength="1" value="{{comida.precio}}">
-          </div>
-          
-          
-          <button type="submit" class="btn btn-danger">Guardar Cambios</button>
-        </form>
         </div>
-      </header>
+    </header>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
 <style>
-  .background-page{
-    background: url(/static/fondo-pizza.jpg);
-    background-size: cover;
-    min-height: 652.5px;
-}
-.background-over{
-    background: rgba(236, 240, 241,.30);
-    min-height: 652.5px;
-}
+    .background-page {
+        background: url(/static/fondo-pizza.jpg);
+        background-size: cover;
+        min-height: 652.5px;
+    }
+
+    .background-over {
+        background: rgba(236, 240, 241, .30);
+        min-height: 652.5px;
+    }
 </style>
+
 </html>
