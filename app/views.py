@@ -182,8 +182,7 @@ def editar_usuario(request, id):
     #en primera instancia se renderizara hacia la template
     return render(request, "editar_usuario.html", contexto)
 
-def boleta():
-
+def boleta(request):
     #cliente que pide la comida
     comidas = ['churrasssco','Chacarero','Lomito','Bebida','Café']
     descripciones = [1233124,123123,123123,12312,123123]
@@ -217,6 +216,8 @@ def boleta():
     if pisaStatus.err:
         return HttpResponse('Error <pre>',html,'</pre>')
 
+    #Luego de creada y enviada nuestra boleta se rederigirá hacia una pagina agradecimientos
+    return render(request,"gracias.html")
 
 def enviar_boleta(RUTA,correo):
     #IMPORTANTE: parametro ruta es la ruta donde queremos guardar nuestra boleta temporal, 
