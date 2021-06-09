@@ -3,13 +3,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <link rel="stylesheet" href="../Estilo.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <title>Document</title>
 </head>
 
 <body>
@@ -77,55 +76,66 @@
       </div>
     </div>
   </nav>
-    <header class="background-page">
-        <div class="background-over">
+  <header class="background-page">
+    <div class="background-over py-3">
+      <h3 class="mx-3"> Carrito</h3>
 
-            <form class="container" action="/tatinspizza.com/editar_cliente/{{usuario.id_usuario}}" method="POST">
-                {%csrf_token%}
-                <br>
-                <h3>Editar Usuario</h3>
-                <div class="mb-3 mt-4">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control" minlength="1" name="nombre" value="{{usuario.nombre}}">
-                </div>
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="text" class="form-control" minlength="1" name="correo" value="{{usuario.correo}}">
-                </div>
-                <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" class="form-control" minlength="1" name="contrasena1"
-                        value="{{usuario.contrasena}}">
-                    <div id="passHelp" class="form-text-black">Considere minimo 6 caracteres </div>
-                </div>
-                <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" class="form-control" minlength="1" name="contrasena2"
-                        value="{{usuario.contrasena}}">
-                    <div id="passHelp2" class="form-text-black">Repita la contraseña anterior</div>
-                </div>
-                <div class="mt-5">
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    <a href="/tatinspizza.com/perfil" class="btn btn-danger"> Cancelar</a>
-                </div>
-            </form>
+      {% for pedido in carrito %}
+      <div class="card mx-5 mt-5" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{pedido.comida.nombre}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{pedido.comida.precio}}</h6>
+          <div class="row row-cols-3">
+            <a class=" boton btn btn-danger"
+              href="/tatinspizza.com/disminuir_al_carrito/{{pedido.comida.id_comida}}">-</a>
+            <p class="cantidad d-flex justify-content-center">{{ pedido.cantidad }}</p>
+            <a class="boton btn btn-danger" href="/tatinspizza.com/agregar_al_carrito/{{pedido.comida.id_comida}}">+</a>
+          </div>
+          <p class="card-text">{{pedido.comida.descripcion}}</p>
         </div>
-    </header>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous">
-        </script>
+      </div>
+      {% endfor %}
+
+      {% if carrito %}
+      <div class="py-5">
+        <div class="d-flex justify-content-end mx-5">
+          <a href="/tatinspizza.com/gracias" class="btn btn-warning">Realizar Pedido</a>
+        </div>
+      </div>
+      {% endif %}
+
+
+
+    </div>
+  </header>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
 </body>
 <style>
-    .background-page {
-        background: url(/static/fondo-pizza.jpg);
-        background-size: cover;
-        min-height: 652.5px;
-    }
+  .background-page {
+    background: url(/static/fondo-pizza.jpg);
+    background-size: cover;
+    min-height: 652.5px;
+  }
 
-    .background-over {
-        background: rgba(236, 240, 241, .30);
-        min-height: 652.5px;
-    }
+  .background-over {
+    background: rgba(236, 240, 241, .30);
+    min-height: 652.5px;
+  }
+
+  .boton {
+    border-radius: 100px;
+    width: 15%
+  }
+
+  .cantidad {
+    display: flexbox;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: 0;
+  }
 </style>
 
 </html>
