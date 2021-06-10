@@ -538,7 +538,7 @@ def editar_usuario(request, id):
 
         # si es que la contraseñas del formulario no son coincidentes se rederigirá de nuevo a la misma direccion sin permitir la edicion del usuario
         if contrasena1 != contrasena2:
-            return redirect("/tatinspizza.com/editar_usuario/"+str(id))
+            return redirect("/tatinspizza.com/editar_cliente/"+str(id))
 
         # si el metodo llego hasta aqui es porque se cumplieron las condiciones
         # asi que traemos la instancia de Comida  desde  la base de datos

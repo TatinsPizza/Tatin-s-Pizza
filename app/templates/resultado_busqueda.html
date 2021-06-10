@@ -43,7 +43,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {%if isLogged == False%}
               <li><a class="dropdown-item" href="/tatinspizza.com/inicio_sesion">Iniciar sesion</a></li>
-              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Regisarse</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Registrarse</a></li>
               {% endif %}
 
               {%if isLogged%}
@@ -82,7 +82,7 @@
       <div class="row mx-3">
         {%for comida in resultados %}
         <br>
-        <div class="card mx-3" style="width: 18rem;">
+        <div class="card mx-3 mb-5" style="width: 20rem;">
           <div class="card-body">
             <h5 class="card-title">{{comida.nombre}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">{{comida.precio}}</h6>
