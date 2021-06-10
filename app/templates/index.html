@@ -1,0 +1,160 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <title>Tatin's Pizza</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-danger">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/tatinspizza.com"><img style="max-width: 80px;" src="{% static 'Logo_Tatin_.png' %}"
+          alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/mi_perfil">Mi Perfil</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/menu">Menu</a>
+          </li>
+          {%if isLogged%}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/tatinspizza.com/carrito">Carrito</a>
+          </li>
+          {% endif %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Sesion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {%if isLogged == False%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/inicio_sesion">Iniciar sesion</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/registro">Registrarse</a></li>
+              {% endif %}
+
+              {%if isLogged%}
+              <li><a class="dropdown-item" href="/tatinspizza.com/cerrar_sesion">Cerrar Sesion</a></li>
+              {% endif %}
+
+            </ul>
+          </li>
+          {%if isAdmin%}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Administracion
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_clientes">Monitorear
+                  Clientes</a></li>
+              <li><a class="dropdown-item" href="/tatinspizza.com/monitoreo_comidas">Monitorear Comida</a>
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+        </ul>
+        <form class="d-flex mt-2" action="/tatinspizza.com/resultado_busqueda" method="POST">
+          {%csrf_token%}
+          <input class="form-control me-2 " type="search" placeholder="Busqueda" aria-label="Search" minlength="1"
+            name="nombre">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <header class="main-header">
+    <div class="background-overlay  text-center text-black py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center justify-content-center align-self-center">
+            <h1>Prueba la especialidad de la casa</h1>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae, et.</p>
+          </div>
+          <div class="col-md-6">
+            <img src="{% static 'pizza_producto.png' %}" alt="Producto Imagen" class="img-fluid" style="width: 90%;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {% if isLogged %}
+  <section class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9">
+
+          <H3>Dejanos Tu Comentario</H3>
+          <form action="/tatinspizza.com/comentario" method="POST">
+            {%csrf_token%}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <i class="input-group-text"><img src="{% static 'message-square.svg' %}" style="width: 95%;"></i>
+              </div>
+              <textarea type="text" class="form-control" placeholder="Comentario" minlength="1" maxlength="200"
+                name="texto"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">Enviar Comentario</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  <div class="container text-center" id="contenedor_comentarios">
+    <h3>Comentarios Recientes</h3>
+    <div id="comentarios">
+      {% for comentario in comentarios %}
+      <div class="card mt-3">
+        <h5 class="card-header ">{{comentario.usuario.nombre}}</h5>
+        <div class="card-body">
+          <p class="card-text">{{comentario.texto}}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous">
+    </script>
+</body>
+<style>
+  .background-page {
+    background: url(/static/fondo-pizza.jpg);
+    background-size: cover;
+    min-height: 652.5px;
+  }
+
+  .background-over {
+    background: rgba(236, 240, 241, .30);
+    min-height: 652.5px;
+  }
+
+  .main-header {
+    background: url(/static/fondo-pizza.jpg);
+    background-size: cover;
+    min-height: 500px;
+  }
+
+  .background-overlay {
+    background: rgba(236, 240, 241, .50);
+    min-height: 500px;
+  }
+</style>
+
+</html>
